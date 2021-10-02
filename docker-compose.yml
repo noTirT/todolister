@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  todo-couchbase:
+    image: couchbase
+    container_name: todo_cb
+
+    ports:
+      - "11210:11210"
+      - "8091:8091"
+      - "8092:8092"
+      - "8093:8093"
+
+    volumes:
+      - todo_cb_data:/opt/couchbase/var
+
+    networks:
+      - todo_network
+
+  todo-backend:
+    build: .
+    container_name: todo_backend
+
+    ports:
+      - "2121:8080"
+
+    restart: always
+
+    env_file:
+      - ./env.list
+
+    depends_on:
+      - todo-couchbase
+
+    networks:
+      - todo_network
+
+networks:
+  todo_network:
+    driver: bridge
+
+volumes:
+  todo_cb_data:
