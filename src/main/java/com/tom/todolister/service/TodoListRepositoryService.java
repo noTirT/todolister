@@ -2,6 +2,7 @@ package com.tom.todolister.service;
 
 import com.tom.todolister.model.TodoItem;
 import com.tom.todolister.repository.CouchbaseRepository;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,10 +14,10 @@ import java.util.stream.StreamSupport;
 
 @Service
 @Qualifier("TodoListRepositoryService")
+@RequiredArgsConstructor
 public class TodoListRepositoryService implements TodoService{
 
-    @Autowired
-    private CouchbaseRepository repository;
+    private final CouchbaseRepository repository;
 
     public TodoItem findById(String id) {
         return repository.findById(id).orElse(null);

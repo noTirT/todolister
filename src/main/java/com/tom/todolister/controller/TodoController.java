@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/todo")
+@RequiredArgsConstructor
 public class TodoController {
 
-    @Autowired
-    private TodoListRepositoryService service;
+    private final TodoListRepositoryService service;
 
     @Operation(summary = "Get all todo-items", description = "Returns a list of all available todo-items")
     @ApiResponses(value = {
