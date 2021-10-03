@@ -1,5 +1,6 @@
 package com.tom.todolister.service;
 
+import com.tom.todolister.model.PriorityLevel;
 import com.tom.todolister.model.TodoItem;
 import com.tom.todolister.repository.CouchbaseRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,10 @@ public class TodoListRepositoryService implements TodoService{
 
     public List<TodoItem> findByTitle(String title) {
         return repository.findByTitle(title);
+    }
+
+    public List<TodoItem> findByPriorityLevel(PriorityLevel priorityLevel) {
+        return repository.findByPriorityLevel(priorityLevel);
     }
 
     public void create(TodoItem todoItem) {

@@ -1,5 +1,6 @@
 package com.tom.todolister.controller;
 
+import com.tom.todolister.model.PriorityLevel;
 import com.tom.todolister.model.TodoItem;
 import com.tom.todolister.service.TodoListRepositoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +24,7 @@ public class TodoController {
 
     private final TodoListRepositoryService service;
 
+
     @Operation(summary = "Get all todo-items", description = "Returns a list of all available todo-items")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Todo-items found",
@@ -34,6 +35,7 @@ public class TodoController {
     public ResponseEntity<List<TodoItem>> getAllTodoItems() {
         return new ResponseEntity<>(service.findAllTodoItems(), HttpStatus.OK);
     }
+
 
     @Operation(summary = "Get todo-items by id", description = "Searches database for a todo-items with a given id and returns it")
     @ApiResponses(value = {
@@ -48,6 +50,7 @@ public class TodoController {
         return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 
+
     @Operation(summary = "Get todo-items by title", description = "Searches database for a todo-item with a given title and returns it")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Todo-item(s) found",
@@ -61,6 +64,21 @@ public class TodoController {
         return new ResponseEntity<>(service.findByTitle(title), HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Get todo-items by priority-level", description = "Searches database for todo-items with a given priority-level and returns them")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Todo-items found",
+                    content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TodoItem.class)))}),
+            @ApiResponse(responseCode = "400", description = "Invalid priority-level supplied"),
+            @ApiResponse(responseCode = "404", description = "No todo-items with the given priority-level found")
+    })
+    @GetMapping("")
+    public ResponseEntity<List<TodoItem>> getTodoItemsByPriority(
+            @Parameter(description = "Priority level to search for", schema = @Schema(implementation = PriorityLevel.class)) @RequestParam PriorityLevel priorityLevel) {
+        return new ResponseEntity<>(service.findByPriorityLevel(priorityLevel), HttpStatus.OK);
+    }
+
+
     @Operation(summary = "Save a new todo-item to the database", description = "Saves a new todo-item to the database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Todo-item saved", content = @Content),
@@ -72,6 +90,7 @@ public class TodoController {
         service.create(newTodoItem);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     @Operation(summary = "Update a todo-item", description = "Replace the values of a existing todo-item in the database with the new supplied ones")
     @ApiResponses(value = {
@@ -85,6 +104,7 @@ public class TodoController {
         service.update(updatedTodoItem);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     @Operation(summary = "Delete todo-item", description = "Delete the supplied todo-item")
     @ApiResponses(value = {
